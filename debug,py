@@ -1,0 +1,7 @@
+# Importiere die Liste aus der Flask-App
+from hello import data_list
+
+# Gebe die Liste in der Konsole aus
+if __name__ == "__main__":
+    print("Current List:")
+    print(data_list)

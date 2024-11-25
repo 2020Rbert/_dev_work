@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/styles.css') }}">    
+    <title>Flask Test - SQL new data entry</title>
+    
+</head>
+<body>
+    <h1>Flask Test - SQL new data entry</h1>
+    <div class="box1">
+    <form action="/submit_form" method="POST">
+        <p>Select model:</p><br>
+        <!-- MacBook Pro -->
+        <input type="radio" id="macbook-pro" name="model" value="MacBook Pro" required>
+        <label for="macbook-pro">MacBook Pro</label><br>
+        <!-- #MacBook Air -->
+        <input type="radio" id="macbook-air" name="model" value="MacBook Air" >
+        <label for="macbook-air">MacBook Air</label><br>
+        <!-- #Lenovo -->
+        <input type="radio" id="lenovo" name="model" value="Lenovo" >
+        <label for="lenovo">Lenovo</label><br>
+        <!-- #Other -->
+        <input type="radio" id="other" name="model" value="other" >
+        <label for="other">Other</label><br>
+        <input type="text" id="other-model" name="other-model" placeholder="specify other" ><br><br>
+        <br>
+
+        <label for="name">User:</label><br>
+        <input type="text" name="username" id="" placeholder="Issued user" required>
+        <br>
+        <p>Keyboard Layout:</p>
+        <input type="radio" name="layout" id="layout_us" value="US" required>
+        <label for="US">US</label><br>
+
+        <input type="radio" name="layout" id="layout_int" value="US(INT)">
+        <label for="US(INT)">US(International)</label><br>
+
+        <input type="radio" name="layout" id="layout_uk" value="UK">
+        <label for="UK">UK</label><br>
+
+        <input type="radio" name="layout" id="layout_de" value="DE">
+        <label for="DE">DE</label><br>
+
+        <input type="radio" name="layout" id="layout_other" value="other_kb">
+        <label for="other_kb">other</label> 
+        <input type="text" name="other_kb_text" id="other_kb_text" >
+        <br><button type="submit">Submit</button>
+    </form>
+
+    <form action="/debug_list" method="GET">
+        <button type="submit" action="/debug_list">Print List console</button>
+    </form>
+    
+</div>
+</body>
+</html>

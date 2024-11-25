@@ -1,0 +1,10 @@
+.box1 {
+    border: solid 2px rgb(138, 194, 138);
+    background-color: rgb(138, 194, 138);
+    width: 400px;
+}
+
+p {
+    inline-size:auto;
+
+}
