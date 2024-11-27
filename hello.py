@@ -1,8 +1,10 @@
 from flask import Flask, request, render_template
+import db_connection as db
 
 app = Flask(__name__)
 
 data_list = []
+cnx = db.connect_db()
 @app.route("/")
 def home():
     return render_template("index.html")  # Zeigt die HTML-Seite mit dem Button
