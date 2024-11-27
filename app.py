@@ -1,10 +1,12 @@
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 import db_connection as db
+
+
 
 app = Flask(__name__)
 
 data_list = []
-cnx = db.connect_db()
+
 @app.route("/")
 def home():
     return render_template("index.html")  # Zeigt die HTML-Seite mit dem Button
@@ -51,5 +53,16 @@ def print_list():
     print(f"Current List: {data_list}")  # Ausgabe in der Server-Konsole
     return f"Current List: {data_list}"  # Rückgabe als String für den Browser
 
+@app.route("/read_db", methods=["GET"])
+def read_db():
+    
+    try:
+        result = db.read_db()  # Funktion, die die Datenbank abfragt
+        return jsonify(result)  # Daten als JSON zurückgeben
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+    
+    
 if __name__ == "__main__":
     app.run(debug=True)

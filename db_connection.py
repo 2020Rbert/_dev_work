@@ -27,14 +27,17 @@ def connect_db():
         
 #? CRUD METHODEN IMPLEMETIEREN
 
-def read():
-    with connect_db as cnx:
+def read_db():
+    with connect_db() as cnx:
         try:
             cursor = cnx.cursor()
             #! hardcoded -- tablename
-            cursor.execute("--sql SELECT * FROM laptop_test")
+            cursor.execute("""SELECT * FROM laptop_test""")
             results = cursor.fetchall()
-            for row in results:
-                print(row)
+            # for row in results:
+            #     print(row)
+            return results
         except mysql.connector.Error as e:
-            print(f"Error during read: {e}")
+            print(f"Error:{e}")
+            return []
+

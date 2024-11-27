@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Read from Database</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
+</head>
+<body>
+    <h1>Laptop Database</h1>
+    <button id="load-data">Load Data</button>
+    <table border="1" id="data-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamische Daten werden hier eingefügt -->
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $("#load-data").click(function () {
+                // AJAX-Aufruf an die Flask-Route
+                $.ajax({
+                    url: "/read_db",
+                    type: "GET",
+                    success: function (response) {
+                        // Tabelle leeren
+                        $("#data-table tbody").empty();
+                        
+                        // Daten in die Tabelle einfügen
+                        response.forEach(function (row) {
+                            $("#data-table tbody").append(
+                                `<tr>
+                                    <td>${row[0]}</td>
+                                    <td>${row[1]}</td>
+                                    <td>${row[2]}</td>
+                                </tr>`
+                            );
+                        });
+                    },
+                    error: function (xhr) {
+                        // Fehler behandeln
+                        alert("Error loading data: " + xhr.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

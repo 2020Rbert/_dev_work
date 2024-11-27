@@ -8,3 +8,13 @@ p {
     inline-size:auto;
 
 }
+
+table {
+    border: solid 1px black
+}
+td {
+    margin-right: 20%; 
+}
+th {
+    background-color: rgb(160, 255, 231);
+}
