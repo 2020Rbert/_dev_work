@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DataTable Test</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Search Highlight CSS -->
+    <link rel="stylesheet" type="text/css"
+        href="https://cdn.datatables.net/plug-ins/1.13.7/features/searchHighlight/dataTables.searchHighlight.css">
+
+    <!-- Search Highlight JS -->
+    <script
+        src="https://cdn.datatables.net/plug-ins/1.13.7/features/searchHighlight/dataTables.searchHighlight.min.js"></script>
+    <script src="https://bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h1>Laptop Übersicht - Test</h1>
+
+        <!-- Test-Button für Modal -->
+        <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#laptopModal">
+            Neuen Laptop hinzufügen
+        </button>
+
+        <!-- Die Tabelle -->
+        <table id="laptopTable" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Model</th>
+                    <th>User</th>
+                    <th>Layout</th>
+                </tr>
+            </thead>
+        </table>
+
+        <!-- Füge dieses HTML direkt nach dem <div class="container mt-4"> ein -->
+        <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
+            <div id="messageToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="toast-header">
+                    <strong class="me-auto" id="toastTitle">Mitteilung</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body" id="toastMessage">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal mit dem Formular aus index.html -->
+    <div class="modal fade" id="laptopModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Neuer Laptop</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="/write_db" method="POST">
+                        <!-- Laptop-Modell Sektion -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2">Laptop Modell</h6>
+                            <div class="form-check">
+                                <input type="radio" id="macbook-pro" name="model" value="MacBook Pro"
+                                    class="form-check-input" required>
+                                <label class="form-check-label" for="macbook-pro">MacBook Pro</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" id="macbook-air" name="model" value="MacBook Air"
+                                    class="form-check-input">
+                                <label class="form-check-label" for="macbook-air">MacBook Air</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" id="lenovo" name="model" value="Lenovo" class="form-check-input">
+                                <label class="form-check-label" for="lenovo">Lenovo</label>
+                            </div>
+                            <div class="form-check d-flex align-items-center gap-2">
+                                <input type="radio" id="other" name="model" value="other" class="form-check-input">
+                                <input type="text" id="other-model" name="other-model"
+                                    class="form-control form-control-sm" placeholder="Other --- specify other model"
+                                    style="width: auto;">
+                            </div>
+                        </div>
+
+                        <!-- Benutzer Sektion -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2">Benutzer</h6>
+                            <div class="form-floating mb-3">
+                                <input type="text" name="username" class="form-control" id="username"
+                                    placeholder="Benutzername" required>
+                                <label for="username">Issued user</label>
+                            </div>
+                        </div>
+
+                        <!-- Tastatur Layout Sektion -->
+                        <div class="mb-4">
+                            <h6 class="border-bottom pb-2">Tastatur Layout</h6>
+                            <div class="form-check">
+                                <input type="radio" name="layout" id="layout_us" value="US" class="form-check-input"
+                                    required>
+                                <label class="form-check-label" for="layout_us">US</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="layout" id="layout_int" value="US(INT)"
+                                    class="form-check-input">
+                                <label class="form-check-label" for="layout_int">US (International)</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="layout" id="layout_uk" value="UK" class="form-check-input">
+                                <label class="form-check-label" for="layout_uk">UK</label>
+                            </div>
+                            <div class="form-check">
+                                <input type="radio" name="layout" id="layout_de" value="DE" class="form-check-input">
+                                <label class="form-check-label" for="layout_de">DE</label>
+                            </div>
+                            <div class="form-check d-flex align-items-center gap-2">
+                                <input type="radio" name="layout" id="layout_other" value="other_kb"
+                                    class="form-check-input">
+                                <label class="form-check-label" for="layout_other">Other</label>
+                                <input type="text" name="other_kb_text" id="other_kb_text"
+                                    class="form-control form-control-sm" placeholder="Other --- specify other layout"
+                                    style="width: auto;">
+                            </div>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Schließen</button>
+                            <button type="submit" class="btn btn-primary">Speichern</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Hervorhebung der Suchergebnisse */
+        .dataTables_wrapper .highlight {
+            background-color: #ffeb3b !important;
+            /* Gelbe Hervorhebung */
+            padding: 2px;
+            border-radius: 2px;
+        }
+
+        /* Optional: Animation für die Hervorhebung */
+        .dataTables_wrapper .highlight {
+            animation: highlightFade 0.5s;
+        }
+
+        @keyframes highlightFade {
+            from {
+                background-color: #fff700;
+            }
+
+            to {
+                background-color: #ffeb3b;
+            }
+        }
+
+        /* Bereits existierende Styles beibehalten und diese hinzufügen: */
+        .toast {
+            min-width: 300px;
+            margin-bottom: 1rem;
+        }
+
+        .bg-success {
+            background-color: #28a745 !important;
+        }
+
+        .bg-danger {
+            background-color: #dc3545 !important;
+        }
+
+        .toast-header {
+            color: #fff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .toast-header .btn-close {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Zusätzliche Styles für das Modal */
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-check {
+            margin-bottom: 0.5rem;
+            padding-left: 1.5rem;
+        }
+
+        h6 {
+            color: #0d6efd;
+            margin-bottom: 1rem;
+        }
+
+        .border-bottom {
+            border-color: #dee2e6 !important;
+        }
+
+        /* Optional: Hover-Effekt für Radio-Buttons */
+        .form-check:hover {
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+
+        /* Zusätzliche Styles */
+        .form-check.d-flex .form-control-sm {
+            min-width: 200px;
+            margin-left: 10px;
+        }
+    </style>
+
+    <script>
+        $(document).ready(function () {
+            // DataTable Initialisierung
+            let table = $('#laptopTable').DataTable({
+                ajax: {
+                    url: '/api/laptops',
+                    dataSrc: 'data'  // Wichtig: Gibt an, wo die Daten im JSON zu finden sind
+                },
+                columns: [
+                    { data: 'model' },
+                    { data: 'username' },
+                    { data: 'layout' }
+                ],
+                scrollY: '80vh',
+                scrollCollapse: true,
+                paging: false,
+                info: false,
+                language: {
+                    url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/de-DE.json',
+                    search: "Suchen:"    // Deutscher Text für Suchfeld
+                },
+                searchHighlight: true,  // Aktiviert die Hervorhebung
+                dom: '<"top"f>rt<"bottom">' // Anpassung des Layouts (nur Suche und Tabelle)
+            });
+
+            // Optional: Reload-Button
+            $('#reloadTable').on('click', function () {
+                table.ajax.reload();
+            });
+
+            // Verbesserte Form-Submission
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+
+                // Formular-Daten sammeln
+                let model = $('input[name="model"]:checked').val();
+                let username = $('input[name="username"]').val();
+                let layout = $('input[name="layout"]:checked').val();
+
+                // Prüfen auf "other" Optionen
+                if (model === 'other') {
+                    model = $('input[name="other-model"]').val();
+                }
+                if (layout === 'other_kb') {
+                    layout = $('input[name="other_kb_text"]').val();
+                }
+
+                // Daten-Objekt erstellen
+                let data = {
+                    model: model,
+                    username: username,
+                    layout: layout
+                };
+
+                console.log('Sending data:', data); // Debug-Ausgabe
+
+                // AJAX Request
+                $.ajax({
+                    url: '/write_db',
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data),
+                    success: function (response) {
+                        console.log('Success:', response);
+                        // Modal schließen
+                        $('#laptopModal').modal('hide');
+                        // Formular zurücksetzen
+                        $('form')[0].reset();
+                        // Tabelle neu laden
+                        table.ajax.reload();
+
+                        // Erfolgs-Toast anzeigen
+                        $('#toastTitle').text('Erfolg');
+                        $('#toastMessage').text('Daten erfolgreich gespeichert!');
+                        $('#messageToast').removeClass('bg-danger text-white').addClass('bg-success text-white');
+                        new bootstrap.Toast($('#messageToast')).show();
+                    },
+                    error: function (error) {
+                        console.error('Error:', error);
+                        // Fehler-Toast anzeigen
+                        $('#toastTitle').text('Fehler');
+                        $('#toastMessage').text('Fehler beim Speichern: ' +
+                            (error.responseJSON ? error.responseJSON.message : error.statusText));
+                        $('#messageToast').removeClass('bg-success text-white').addClass('bg-danger text-white');
+                        new bootstrap.Toast($('#messageToast')).show();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>

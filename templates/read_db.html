@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <title>Read from Database</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery -->
 </head>
+
 <body>
     <h1>Laptop Database</h1>
     <button id="load-data">Load Data</button>
@@ -21,34 +23,40 @@
     </table>
 
     <script>
-        $(document).ready(function () {
-            $("#load-data").click(function () {
-                // AJAX-Aufruf an die Flask-Route
-                $.ajax({
-                    url: "/read_db",
-                    type: "GET",
-                    success: function (response) {
-                        // Tabelle leeren
-                        $("#data-table tbody").empty();
-                        
-                        // Daten in die Tabelle einfügen
-                        response.forEach(function (row) {
-                            $("#data-table tbody").append(
-                                `<tr>
-                                    <td>${row[0]}</td>
-                                    <td>${row[1]}</td>
-                                    <td>${row[2]}</td>
-                                </tr>`
-                            );
-                        });
-                    },
-                    error: function (xhr) {
-                        // Fehler behandeln
-                        alert("Error loading data: " + xhr.responseText);
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('load-data').addEventListener('click', async function () {
+                try {
+                    // Fetch-Aufruf an die Flask-Route
+                    const response = await fetch('/read_db');
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
                     }
-                });
+
+                    const data = await response.json();
+
+                    // Tabelle leeren
+                    const tableBody = document.querySelector('#data-table tbody');
+                    tableBody.innerHTML = '';
+
+                    // Daten in die Tabelle einfügen
+                    data.forEach(row => {
+                        tableBody.insertAdjacentHTML('beforeend', `
+                            <tr>
+                                <td>${row[0]}</td>
+                                <td>${row[1]}</td>
+                                <td>${row[2]}</td>
+                            </tr>
+                        `);
+                    });
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error loading data: ' + error.message);
+                }
             });
         });
     </script>
 </body>
+
 </html>

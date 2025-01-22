@@ -1,4 +1,4 @@
-from flask import Flask, request, render_template, jsonify
+from flask import Flask, request, render_template, jsonify, flash, redirect, url_for
 import db_connection as db
 
 
@@ -11,8 +11,12 @@ data_list = []
 def home():
     return render_template("index.html")  # Zeigt die HTML-Seite mit dem Button
 
-@app.route("/submit_form", methods=["POST"])
-def submit_form():
+@app.route('/table-test')
+def table_test():
+    return render_template('table_test.html')
+
+@app.route("/submit_form_in_list", methods=["POST"])
+def submit_form_in_list():
     # Daten aus dem Formular abrufen
     model =         request.form.get("model")
     model_text =    request.form.get("other-model")
@@ -53,16 +57,75 @@ def print_list():
     print(f"Current List: {data_list}")  # Ausgabe in der Server-Konsole
     return f"Current List: {data_list}"  # Rückgabe als String für den Browser
 
+# @app.route("/read_db", methods=["GET"])
+# def read_db():
+    
+#     try:
+#         result = db.read_db()  # Funktion, die die Datenbank abfragt
+#         return jsonify(result)  # Daten als JSON zurückgeben
+#     except Exception as e:
+#         return jsonify({"error": str(e)}), 500
+
+@app.route("/show_db", methods=["GET"])
+def show_db():
+    print("show_db route wurde aufgerufen") 
+    return render_template('read_db_2.html')
+
 @app.route("/read_db", methods=["GET"])
 def read_db():
-    
     try:
-        result = db.read_db()  # Funktion, die die Datenbank abfragt
-        return jsonify(result)  # Daten als JSON zurückgeben
+        result = db.read_db()
+        data = [{"id": row[0], "name": row[1], "price": row[2]} for row in result]
+        return jsonify(data)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-    
-    
+@app.route("/write_db", methods=["POST"])
+def submit_form_db():
+    try:
+        # Konvertiert den eingehenden JSON-Request in ein Python-Dictionary
+        data = request.get_json()
+        
+        # Extrahiert die einzelnen Werte aus dem Dictionary
+        model = data.get('model')
+        username = data.get('username')
+        layout = data.get('layout')
+        
+        # Ruft die write_db Funktion aus dem db_connection Modul auf
+        success = db.write_db(model, username, layout)
+        
+        # Gibt eine Erfolgs- oder Fehlermeldung zurück
+        if success:
+            return jsonify({"status": "success", "message": "Data saved successfully"})
+        else:
+            return jsonify({"status": "error", "message": "Database error"}), 500
+            
+    except Exception as e:
+        return jsonify({"status": "error", "message": str(e)}), 500
+
+@app.route('/api/laptops')
+def get_laptops():
+    try:
+        result = db.read_db()  # Ihre bestehende read_db Funktion
+        # Formatieren der Daten für DataTables
+        data = [
+            {
+                "model": row[1],  # Anpassen an Ihre Spaltenindizes
+                "username": row[2],
+                "layout": row[3]
+            } 
+            for row in result
+        ]
+        return jsonify({"data": data})  # Wichtig: DataTables erwartet die Daten im "data" Feld
+    except Exception as e:
+        print(f"Error fetching data: {e}")  # Debug-Ausgabe
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(debug=True)
+
+print("Registered Routes:")
+def list_routes():
+    for rule in app.url_map.iter_rules():
+        print(f"{rule.endpoint}: {rule.methods} - {rule}")
+list_routes()
