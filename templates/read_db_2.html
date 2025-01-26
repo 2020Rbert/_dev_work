@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Read from Database</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+</head>
+<body>
+    <h1>Laptop Database</h1>
+    <table id="data-table" class="display">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Daten werden per AJAX geladen -->
+        </tbody>
+    </table>
+
+    <script>
+        $(document).ready(function () {
+            $('#data-table').DataTable({
+                ajax: {
+                    url: '/read_db',  // Flask-Route, die JSON zurückgibt
+                    dataSrc: ''  // Datenquelle im JSON (hier das Root-Array)
+                },
+                columns: [
+                    { data: 'id' },    // Spalte 1: ID
+                    { data: 'name' },  // Spalte 2: Name
+                    { data: 'price' }  // Spalte 3: Price
+                ]
+            });
+        });
+    </script>
+</body>
+</html>
